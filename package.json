@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "react": "18.1.0",
-    "react-native": "0.70.6"
+    "react-native": "0.70.6",
+    "react-native-currency-input": "^1.1.0",
+    "react-native-popup-menu": "^0.16.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
