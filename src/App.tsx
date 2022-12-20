@@ -28,6 +28,7 @@ const App = () => {
     const [toValue, setToValue] = useState(0);
     const [ratesFetched, setRatesFetched] = useState(false);
     const [err, setErr] = useState('');
+    const [ratesLoading, setRatesLoading] = useState(false);
     const {width: switchWidth, onLayout} = useLayout();
 
     const convertDisabled = useMemo(
@@ -54,12 +55,14 @@ const App = () => {
             } catch (e) {
                 setErr('Something went wrong, please make sure amounts are not too small.');
             }
+            setRatesLoading(false);
         };
         fetchRates();
     }, []);
 
     const debouncedConvert = useCallback(
         (params: ConvertInterface) => {
+            setRatesLoading(true);
             if (timer) {
                 clearTimeout(timer);
             }
@@ -155,7 +158,7 @@ const App = () => {
                         <TouchableOpacity
                             disabled={convertDisabled}
                             onPress={() =>
-                                onConvert({
+                                debouncedConvert({
                                     from: fromCurrency.code,
                                     to: toCurrency.code,
                                     amount: fromValue,
@@ -177,7 +180,9 @@ const App = () => {
                                     <View style={styles.convertionRate}>
                                         <View style={styles.circle} />
                                         <Text style={styles.convertionRateText}>
-                                            {fromValue} {fromCurrency.code} = {toValue} {toCurrency.code}
+                                            {ratesLoading
+                                                ? 'Recalculating...'
+                                                : `${fromValue} ${fromCurrency.code} = ${toValue} ${toCurrency.code}`}
                                         </Text>
                                     </View>
                                     <Text style={styles.infoText}>
