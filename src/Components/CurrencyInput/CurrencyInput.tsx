@@ -16,7 +16,7 @@ const CurrencyInput = ({title, value, onValueChange, currencyCode}: Props) => {
             <Text style={styles.title}>{title}</Text>
             <CurrencyInputLib
                 delimiter="."
-                separator=","
+                separator="."
                 precision={2}
                 style={styles.input}
                 value={value}
