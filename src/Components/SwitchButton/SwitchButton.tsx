@@ -1,22 +1,21 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 interface Props {
     onPress: () => void;
 }
 
 const SwitchButton = ({onPress}: Props) => (
-    <TouchableOpacity onPress={onPress}>
-        <View style={styles.icon} />
+    <TouchableOpacity onPress={onPress} style={styles.iconWrapper}>
+        <Icon name="compare-arrows" size={40} color="blue" />
     </TouchableOpacity>
 );
 
 const styles = StyleSheet.create({
-    icon: {
-        width: 30,
-        height: 30,
-        borderWidth: 5,
-        borderColor: 'red',
+    iconWrapper: {
+        width: 40,
+        marginTop: 10,
         marginHorizontal: 20,
     },
 });

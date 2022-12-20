@@ -135,7 +135,7 @@ const App = () => {
                             <View style={styles.currencyInputWrapper}>
                                 <CurrencyInput
                                     currencyCode={toCurrency.code}
-                                    title="TO:"
+                                    title="CONVERTED TO:"
                                     value={toValue}
                                     onValueChange={(value) => {
                                         setToValue(value);
@@ -168,19 +168,22 @@ const App = () => {
                         </TouchableOpacity>
                     )}
                     {ratesFetched && (
-                        <View style={styles.convertionRate}>
+                        <View>
                             {err ? (
                                 <Text style={styles.convertionRateText}>{err}</Text>
                             ) : (
-                                <>
-                                    <Text style={styles.convertionRateText}>
-                                        {fromValue} {fromCurrency.code} = {toValue} {toCurrency.code}
-                                    </Text>
+                                <View>
+                                    <View style={styles.convertionRate}>
+                                        <View style={styles.circle} />
+                                        <Text style={styles.convertionRateText}>
+                                            {fromValue} {fromCurrency.code} = {toValue} {toCurrency.code}
+                                        </Text>
+                                    </View>
                                     <Text style={styles.infoText}>
                                         All figures are live mid-market rates, which are for informational purposes
                                         only. To see the rates for money transfer, please select sending money option.
                                     </Text>
-                                </>
+                                </View>
                             )}
                         </View>
                     )}
@@ -220,11 +223,22 @@ const styles = StyleSheet.create({
     convertText: {
         color: 'white',
     },
-    convertionRate: {},
+    convertionRate: {
+        flexDirection: 'row',
+        marginTop: 40,
+    },
+    circle: {
+        borderWidth: 3,
+        borderColor: '#f7d048',
+        borderRadius: 5,
+        width: 10,
+        height: 10,
+        marginTop: 6,
+        marginRight: 5,
+    },
     convertionRateText: {
         color: 'black',
         fontSize: 18,
-        marginTop: 40,
     },
     infoText: {
         color: 'grey',
