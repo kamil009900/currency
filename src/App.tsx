@@ -9,6 +9,7 @@ import useLayout from './Hooks/useLayout';
 import Colors from './Utils/Colors';
 import {DefaultFromCountry, DefaultToCountry} from './Utils/Countries';
 import axios, {CancelTokenSource} from 'axios';
+import API from './Utils/API';
 
 let previousRequestToken: CancelTokenSource;
 let timer: ReturnType<typeof setTimeout>;
@@ -42,13 +43,7 @@ const App = () => {
                     previousRequestToken.cancel();
                 }
                 previousRequestToken = axios.CancelToken.source();
-                const result = await axios.get('https://my.transfergo.com/api/fx-rates', {
-                    params: {
-                        from,
-                        to,
-                        amount,
-                    },
-                });
+                const result = await API.fetchFXrates({from, to, amount});
                 const calculatedAmount = result.data.toAmount;
                 if (reversed) {
                     setFromValue(calculatedAmount);
@@ -90,11 +85,13 @@ const App = () => {
                             title="FROM:"
                             onPress={(value) => {
                                 setFromCurrency(value);
-                                debouncedConvert({
-                                    from: value.code,
-                                    to: toCurrency.code,
-                                    amount: fromValue,
-                                });
+                                if (ratesFetched) {
+                                    debouncedConvert({
+                                        from: value.code,
+                                        to: toCurrency.code,
+                                        amount: fromValue,
+                                    });
+                                }
                             }}
                             selectedCountry={fromCurrency}
                         />
@@ -105,11 +102,13 @@ const App = () => {
                             title="TO:"
                             onPress={(value) => {
                                 setToCurrency(value);
-                                debouncedConvert({
-                                    from: fromCurrency.code,
-                                    to: value.code,
-                                    amount: fromValue,
-                                });
+                                if (ratesFetched) {
+                                    debouncedConvert({
+                                        from: fromCurrency.code,
+                                        to: value.code,
+                                        amount: fromValue,
+                                    });
+                                }
                             }}
                             selectedCountry={toCurrency}
                         />
@@ -122,11 +121,13 @@ const App = () => {
                                 value={fromValue}
                                 onValueChange={(value) => {
                                     setFromValue(value);
-                                    debouncedConvert({
-                                        from: fromCurrency.code,
-                                        to: toCurrency.code,
-                                        amount: value,
-                                    });
+                                    if (ratesFetched) {
+                                        debouncedConvert({
+                                            from: fromCurrency.code,
+                                            to: toCurrency.code,
+                                            amount: value,
+                                        });
+                                    }
                                 }}
                             />
                         </View>
@@ -162,7 +163,7 @@ const App = () => {
                             }
                             style={{
                                 ...styles.convertButton,
-                                backgroundColor: convertDisabled ? Colors.disabled : '#67d259',
+                                backgroundColor: convertDisabled ? Colors.disabled : Colors.green,
                             }}>
                             <Text style={styles.convertText}>Convert</Text>
                         </TouchableOpacity>
@@ -199,7 +200,7 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     safeArea: {
-        backgroundColor: 'white',
+        backgroundColor: Colors.white,
     },
     topBox: {
         display: 'flex',
@@ -214,14 +215,13 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     convertButton: {
-        backgroundColor: '#67d259',
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10,
         marginTop: 30,
     },
     convertText: {
-        color: 'white',
+        color: Colors.white,
     },
     convertionRate: {
         flexDirection: 'row',
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
     },
     circle: {
         borderWidth: 3,
-        borderColor: '#f7d048',
+        borderColor: Colors.yellow,
         borderRadius: 5,
         width: 10,
         height: 10,
@@ -237,11 +237,11 @@ const styles = StyleSheet.create({
         marginRight: 5,
     },
     convertionRateText: {
-        color: 'black',
+        color: Colors.black,
         fontSize: 18,
     },
     infoText: {
-        color: 'grey',
+        color: Colors.grey,
         fontSize: 14,
         marginTop: 15,
     },

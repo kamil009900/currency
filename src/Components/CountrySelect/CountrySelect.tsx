@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderBottomColor: Colors.border,
         borderBottomWidth: 1,
-        backgroundColor: 'white',
+        backgroundColor: Colors.white,
     },
     list: {
         height: 175,
